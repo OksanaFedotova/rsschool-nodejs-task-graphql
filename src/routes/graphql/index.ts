@@ -11,6 +11,7 @@ import {
 	GraphQLList,
 	GraphQLNonNull
 } from "graphql";
+import { UUIDType } from './types/uuid.js';
 
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
@@ -32,6 +33,24 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify): Promise<void> => {
             type: new GraphQLList(UserType),
             description: 'All users',
             resolve:  async () => await prisma.user.findMany(),
+          },
+           user: {
+            type: UserType,
+            description: 'User by Id',
+            args: {
+              id: {
+                type: UUIDType,
+              },
+            },
+            resolve: async (_source, args: {id: string}, _context) => {
+              const { id } = args;
+              const user = await prisma.user.findUnique({ where: {
+                id: id,
+              },
+            });
+              if (!user) throw httpErrors.notFound();
+              return user;
+            },
           },
         },
       })
