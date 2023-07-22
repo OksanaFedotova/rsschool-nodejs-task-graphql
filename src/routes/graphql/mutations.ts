@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 interface UserInput {
   name: string;
   balance: number;
-};
+}
 
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -23,16 +23,16 @@ const Mutation = new GraphQLObjectType({
       type: UserType,
       description: 'Create user',
       args: {
-        dto: { type: CreateUserInput }
+        dto: { type: CreateUserInput },
       },
-      resolve: async (_source, args: { dto: UserInput }, _context) => 
-        await prisma.user.create({ data: args.dto })
+      resolve: async (_source, args: { dto: UserInput }, _context) =>
+        await prisma.user.create({ data: args.dto }),
     },
     deleteUser: {
       type: UserType, //уточнить
       description: 'Delete user',
       args: {
-        id: { type: UUIDType }, 
+        id: { type: UUIDType },
       },
       resolve: async (_source, args: { id: string }, _context) => {
         const { id } = args;
@@ -49,21 +49,20 @@ const Mutation = new GraphQLObjectType({
       type: UserType,
       description: 'Patch user',
       args: {
-        id: { type: UUIDType }, 
-        dto: { type: ChangeUserInput}
+        id: { type: UUIDType },
+        dto: { type: ChangeUserInput },
       },
-      resolve: async (_source, args: { id: string, dto: UserInput }, _context) => {
+      resolve: async (_source, args: { id: string; dto: UserInput }, _context) => {
         const { id, dto } = args;
         const user = await prisma.user.update({
-          where: { id: id, },
+          where: { id: id },
           data: dto,
         });
         if (!user) throw new Error('not found');
         return user;
       },
-    }
-    }
+    },
   },
-);
+});
 
 export default Mutation;
