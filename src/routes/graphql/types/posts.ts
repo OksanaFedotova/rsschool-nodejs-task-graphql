@@ -5,7 +5,6 @@ import {
   GraphQLString,
 } from 'graphql';
 import { UUIDType } from './uuid.js';
-import { UserType } from './user.js';
 
 export interface PostInput {
   title: string;
@@ -21,7 +20,7 @@ export const PostType = new GraphQLObjectType({
     content: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
-export const createPostInputType = new GraphQLInputObjectType({
+export const CreatePostInput = new GraphQLInputObjectType({
   name: 'CreatePostInput',
   fields: {
     title: { type: new GraphQLNonNull(GraphQLString) },
@@ -30,7 +29,7 @@ export const createPostInputType = new GraphQLInputObjectType({
   },
 });
 
-export const changePostInputType = new GraphQLInputObjectType({
+export const ChangePostInput = new GraphQLInputObjectType({
   name: 'ChangePostInput',
   fields: {
     title: { type: GraphQLString },

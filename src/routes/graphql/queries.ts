@@ -71,7 +71,7 @@ const Query = new GraphQLObjectType({
       resolve: async () => prisma.profile.findMany(),
     },
     profile: {
-      type: ProfileType,
+      type: ProfileType as GraphQLObjectType,
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
       resolve: async (_, { id }: { id: string }) => {
         const profile = await prisma.profile.findUnique({

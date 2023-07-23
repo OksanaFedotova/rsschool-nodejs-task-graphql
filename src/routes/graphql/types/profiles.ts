@@ -11,7 +11,12 @@ import { UUIDType } from './uuid.js';
 import { MemberType } from './memberTypes.js';
 import { UserType } from './user.js';
 import { PrismaClient } from '@prisma/client';
-
+export interface ProfileInput {
+  isMale: boolean;
+  yearOfBirth: number;
+  userId: string;
+  memberTypeId: string;
+}
 const prisma = new PrismaClient();
 export const ProfileType = new GraphQLObjectType({
   name: 'ProfileType',
@@ -36,6 +41,16 @@ export const CreateProfileInput = new GraphQLInputObjectType({
     isMale: { type: GraphQLBoolean },
     yearOfBirth: { type: GraphQLInt },
     userId: { type: UUIDType },
+    memberTypeId: { type: GraphQLString },
+  }),
+});
+
+export const ChangeProfileInput = new GraphQLInputObjectType({
+  name: 'ChangeProfileInput',
+  description: 'Profiles data to change',
+  fields: () => ({
+    isMale: { type: GraphQLBoolean },
+    yearOfBirth: { type: GraphQLInt },
     memberTypeId: { type: GraphQLString },
   }),
 });

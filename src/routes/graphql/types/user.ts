@@ -30,11 +30,37 @@ export const UserType = new GraphQLObjectType({
       resolve: async ({ id }: { id: string }) =>
         prisma.post.findMany({ where: { authorId: id } }),
     },
+    userSubscribedTo: {
+      type: new GraphQLList(UserType),
+      resolve: async ({ id }: { id: string }) =>
+        prisma.user.findMany({
+          where: {
+            subscribedToUser: {
+              some: {
+                subscriberId: id,
+              },
+            },
+          },
+        }),
+    },
+    subscribedToUser: {
+      type: new GraphQLList(UserType),
+      resolve: async ({ id }: { id: string }) =>
+        prisma.user.findMany({
+          where: {
+            userSubscribedTo: {
+              some: {
+                authorId: id,
+              },
+            },
+          },
+        }),
+    },
   }),
 });
 
 export const CreateUserInput = new GraphQLInputObjectType({
-  name: 'UserInput',
+  name: 'CreateUserInput',
   description: 'User data for input',
   fields: () => ({
     name: {
@@ -48,12 +74,11 @@ export const CreateUserInput = new GraphQLInputObjectType({
 });
 
 export const ChangeUserInput = new GraphQLInputObjectType({
-  name: 'UserChange',
+  name: 'ChangeUserInput',
   description: 'User data to change',
   fields: () => ({
     name: {
       type: GraphQLString,
-      description: 'User name, not required, no default value',
     },
     balance: {
       type: GraphQLFloat,
